@@ -34,6 +34,12 @@ namespace BowmarPolls.App_Data
     partial void InsertPoll(Poll instance);
     partial void UpdatePoll(Poll instance);
     partial void DeletePoll(Poll instance);
+    partial void InsertService(Service instance);
+    partial void UpdateService(Service instance);
+    partial void DeleteService(Service instance);
+    partial void InsertClientParticipation(ClientParticipation instance);
+    partial void UpdateClientParticipation(ClientParticipation instance);
+    partial void DeleteClientParticipation(ClientParticipation instance);
     partial void InsertPollElement(PollElement instance);
     partial void UpdatePollElement(PollElement instance);
     partial void DeletePollElement(PollElement instance);
@@ -77,14 +83,6 @@ namespace BowmarPolls.App_Data
 			}
 		}
 		
-		public System.Data.Linq.Table<PollElement> PollElements
-		{
-			get
-			{
-				return this.GetTable<PollElement>();
-			}
-		}
-		
 		public System.Data.Linq.Table<Service> Services
 		{
 			get
@@ -100,6 +98,14 @@ namespace BowmarPolls.App_Data
 				return this.GetTable<ClientParticipation>();
 			}
 		}
+		
+		public System.Data.Linq.Table<PollElement> PollElements
+		{
+			get
+			{
+				return this.GetTable<PollElement>();
+			}
+		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Polls")]
@@ -113,6 +119,8 @@ namespace BowmarPolls.App_Data
 		
 		private string _title;
 		
+		private string _service;
+		
 		private EntitySet<PollElement> _PollElements;
 		
 		private bool serializing;
@@ -125,6 +133,8 @@ namespace BowmarPolls.App_Data
     partial void OnidChanged();
     partial void OntitleChanging(string value);
     partial void OntitleChanged();
+    partial void OnserviceChanging(string value);
+    partial void OnserviceChanged();
     #endregion
 		
 		public Poll()
@@ -174,8 +184,29 @@ namespace BowmarPolls.App_Data
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_service", DbType="NVarChar(1024)")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=3)]
+		public string service
+		{
+			get
+			{
+				return this._service;
+			}
+			set
+			{
+				if ((this._service != value))
+				{
+					this.OnserviceChanging(value);
+					this.SendPropertyChanging();
+					this._service = value;
+					this.SendPropertyChanged("service");
+					this.OnserviceChanged();
+				}
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Poll_PollElement", Storage="_PollElements", ThisKey="id", OtherKey="poll_id")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=3, EmitDefaultValue=false)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=4, EmitDefaultValue=false)]
 		public EntitySet<PollElement> PollElements
 		{
 			get
@@ -250,6 +281,233 @@ namespace BowmarPolls.App_Data
 		public void OnSerialized(StreamingContext context)
 		{
 			this.serializing = false;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Services")]
+	[global::System.Runtime.Serialization.DataContractAttribute()]
+	public partial class Service : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private System.Guid _id;
+		
+		private string _name;
+		
+		private System.Nullable<System.Guid> _current_poll;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(System.Guid value);
+    partial void OnidChanged();
+    partial void OnnameChanging(string value);
+    partial void OnnameChanged();
+    partial void Oncurrent_pollChanging(System.Nullable<System.Guid> value);
+    partial void Oncurrent_pollChanged();
+    #endregion
+		
+		public Service()
+		{
+			this.Initialize();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=1)]
+		public System.Guid id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="VarChar(1024) NOT NULL", CanBeNull=false)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=2)]
+		public string name
+		{
+			get
+			{
+				return this._name;
+			}
+			set
+			{
+				if ((this._name != value))
+				{
+					this.OnnameChanging(value);
+					this.SendPropertyChanging();
+					this._name = value;
+					this.SendPropertyChanged("name");
+					this.OnnameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_current_poll", DbType="UniqueIdentifier")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=3)]
+		public System.Nullable<System.Guid> current_poll
+		{
+			get
+			{
+				return this._current_poll;
+			}
+			set
+			{
+				if ((this._current_poll != value))
+				{
+					this.Oncurrent_pollChanging(value);
+					this.SendPropertyChanging();
+					this._current_poll = value;
+					this.SendPropertyChanged("current_poll");
+					this.Oncurrent_pollChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void Initialize()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Runtime.Serialization.OnDeserializingAttribute()]
+		[global::System.ComponentModel.EditorBrowsableAttribute(EditorBrowsableState.Never)]
+		public void OnDeserializing(StreamingContext context)
+		{
+			this.Initialize();
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ClientParticipation")]
+	[global::System.Runtime.Serialization.DataContractAttribute()]
+	public partial class ClientParticipation : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private string _client_id;
+		
+		private System.Guid _poll_id;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void Onclient_idChanging(string value);
+    partial void Onclient_idChanged();
+    partial void Onpoll_idChanging(System.Guid value);
+    partial void Onpoll_idChanged();
+    #endregion
+		
+		public ClientParticipation()
+		{
+			this.Initialize();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_client_id", DbType="Char(512) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=1)]
+		public string client_id
+		{
+			get
+			{
+				return this._client_id;
+			}
+			set
+			{
+				if ((this._client_id != value))
+				{
+					this.Onclient_idChanging(value);
+					this.SendPropertyChanging();
+					this._client_id = value;
+					this.SendPropertyChanged("client_id");
+					this.Onclient_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_poll_id", DbType="UniqueIdentifier NOT NULL")]
+		[global::System.Runtime.Serialization.DataMemberAttribute(Order=2)]
+		public System.Guid poll_id
+		{
+			get
+			{
+				return this._poll_id;
+			}
+			set
+			{
+				if ((this._poll_id != value))
+				{
+					this.Onpoll_idChanging(value);
+					this.SendPropertyChanging();
+					this._poll_id = value;
+					this.SendPropertyChanged("poll_id");
+					this.Onpoll_idChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void Initialize()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Runtime.Serialization.OnDeserializingAttribute()]
+		[global::System.ComponentModel.EditorBrowsableAttribute(EditorBrowsableState.Never)]
+		public void OnDeserializing(StreamingContext context)
+		{
+			this.Initialize();
 		}
 	}
 	
@@ -442,121 +700,6 @@ namespace BowmarPolls.App_Data
 		public void OnDeserializing(StreamingContext context)
 		{
 			this.Initialize();
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Services")]
-	[global::System.Runtime.Serialization.DataContractAttribute()]
-	public partial class Service
-	{
-		
-		private System.Guid _id;
-		
-		private string _name;
-		
-		private System.Guid _current_poll;
-		
-		public Service()
-		{
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", DbType="UniqueIdentifier NOT NULL")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=1)]
-		public System.Guid id
-		{
-			get
-			{
-				return this._id;
-			}
-			set
-			{
-				if ((this._id != value))
-				{
-					this._id = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="VarChar(1024) NOT NULL", CanBeNull=false)]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=2)]
-		public string name
-		{
-			get
-			{
-				return this._name;
-			}
-			set
-			{
-				if ((this._name != value))
-				{
-					this._name = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_current_poll", DbType="UniqueIdentifier NOT NULL")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=3)]
-		public System.Guid current_poll
-		{
-			get
-			{
-				return this._current_poll;
-			}
-			set
-			{
-				if ((this._current_poll != value))
-				{
-					this._current_poll = value;
-				}
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ClientParticipation")]
-	[global::System.Runtime.Serialization.DataContractAttribute()]
-	public partial class ClientParticipation
-	{
-		
-		private string _client_id;
-		
-		private System.Guid _poll_id;
-		
-		public ClientParticipation()
-		{
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_client_id", DbType="NVarChar(1024) NOT NULL", CanBeNull=false)]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=1)]
-		public string client_id
-		{
-			get
-			{
-				return this._client_id;
-			}
-			set
-			{
-				if ((this._client_id != value))
-				{
-					this._client_id = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_poll_id", DbType="UniqueIdentifier NOT NULL")]
-		[global::System.Runtime.Serialization.DataMemberAttribute(Order=2)]
-		public System.Guid poll_id
-		{
-			get
-			{
-				return this._poll_id;
-			}
-			set
-			{
-				if ((this._poll_id != value))
-				{
-					this._poll_id = value;
-				}
-			}
 		}
 	}
 }

@@ -4,7 +4,21 @@
     <Type Name="Poll">
       <Column Name="id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="title" Type="System.String" DbType="NVarChar(1024) NOT NULL" CanBeNull="false" />
+      <Column Name="service" Type="System.String" DbType="NVarChar(1024)" CanBeNull="true" />
       <Association Name="Poll_PollElement" Member="PollElements" ThisKey="id" OtherKey="poll_id" Type="PollElement" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Services" Member="Services">
+    <Type Name="Service">
+      <Column Name="id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(1024) NOT NULL" CanBeNull="false" />
+      <Column Name="current_poll" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ClientParticipation" Member="ClientParticipations">
+    <Type Name="ClientParticipation">
+      <Column Name="client_id" Type="System.String" DbType="Char(512) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="poll_id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
     </Type>
   </Table>
   <Table Name="dbo.PollElement" Member="PollElements">
@@ -14,19 +28,6 @@
       <Column Name="count" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="poll_id" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
       <Association Name="Poll_PollElement" Member="Poll" ThisKey="poll_id" OtherKey="id" Type="Poll" IsForeignKey="true" DeleteRule="CASCADE" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Services" Member="Services">
-    <Type Name="Service">
-      <Column Name="id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
-      <Column Name="name" Type="System.String" DbType="VarChar(1024) NOT NULL" CanBeNull="false" />
-      <Column Name="current_poll" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
-    </Type>
-  </Table>
-  <Table Name="dbo.ClientParticipation" Member="ClientParticipations">
-    <Type Name="ClientParticipation">
-      <Column Name="client_id" Type="System.String" DbType="NVarChar(1024) NOT NULL" CanBeNull="false" />
-      <Column Name="poll_id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
     </Type>
   </Table>
 </Database>

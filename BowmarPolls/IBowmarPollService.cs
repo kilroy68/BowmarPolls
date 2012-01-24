@@ -19,7 +19,7 @@ namespace BowmarPolls
         Poll GetPoll(string serviceID, string clientID);
 
         [OperationContract]
-        [WebGet(ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Wrapped, UriTemplate = "Vote/{serviceID}/{clientID}/{choice}")]
-        bool Vote(string serviceID, string clientID, string choice);
+        [WebGet(ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Wrapped, UriTemplate = "Vote/{serviceID}/{clientID}/{pollStr}/{choiceStr}")]
+        bool Vote(string serviceID, string clientID, string pollStr, string choiceStr);
     }
 }
